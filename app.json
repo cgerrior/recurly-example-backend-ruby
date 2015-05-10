@@ -1,7 +1,7 @@
 {
   "name": "Recurly Ruby Example",
   "description": "For quickly getting started with a Recurly integration.",
-  "repository": "https://github.com/chrissrogers/recurly-example-integration-ruby",
+  "repository": "https://github.com/cgerrior/recurly-example-integration-ruby",
   "keywords": ["recurly", "ruby", "payments", "subscriptions"],
   "env": {
     "RECURLY_SUBDOMAIN": {
@@ -16,8 +16,5 @@
       "description": "The PUBLIC key from https://app.recurly.com/go/developer/api_access",
       "required": true
     }
-  },
-  "scripts": {
-    "postdeploy": "curl -L https://github.com/chrissrogers/recurly-example-frontend/archive/master.tar.gz | tar xvz; mkdir -p public; mv recurly-example-frontend-master/* public/"
   }
 }
