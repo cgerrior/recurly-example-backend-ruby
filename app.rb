@@ -19,7 +19,7 @@ post '/subscriptions/new' do
     Recurly::Subscription.create!({
       plan_code: params['recurly-plan-code'],
       account: {
-        account_code: SecureRandom.uuid,
+        account_code: rand(10 ** 7),
         billing_info: { token_id: params['recurly-token'] }
       }
     })
