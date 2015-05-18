@@ -13,11 +13,14 @@ html, body {
 }
 
 body {
-  background-color: #e1e3e6;
+  background: -webkit-linear-gradient(-30deg, #e1e3e6, #ebeff8);
+  background: -moz-linear-gradient(-30deg, #e1e3e6, #ebeff8);
+  background: -ms-linear-gradient(-30deg, #e1e3e6, #ebeff8);
+  background: -o-linear-gradient(-30deg, #e1e3e6, #ebeff8);
+  background: linear-gradient(-30deg, #e1e3e6, #ebeff8);
   font-family: 'Open Sans', Helvetica, sans-serif;
   text-align: center;
 }
-
 
 section {
   margin: 0 auto;
@@ -28,8 +31,7 @@ section:first-child {
   overflow: auto;
 }
 
-#auto_form {
-	display:none;
+form {
 }
 
 label {

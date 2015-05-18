@@ -1,118 +1,286 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Recurly.js Example: Minimal Billing Information</title>
-    <script src="https://js.recurly.com/v3/recurly.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="config.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
-    <link href="index.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
-  <body>
-    <form method="post" action="/api/subscriptions/new">
-      <section>
-        <figure class="logo">
-          <span class="price">$10</span>
-          <span class="term">monthly</span>
-        </figure>
-      </section>
+<head>
+  <title>Recurly.js Example: Minimal Billing Information</title>
+  <script src="https://js.recurly.com/v3/recurly.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="config.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+  <link href="index.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
 
-      <section id="errors"></section>
+  <section id="errors"></section>
+	
+  <section>
+    <div>
+      <label for="invoice_type">Invoice Type</label>
+      <select id="payment" onChange="hideform();">
+        <option value="manual" selected="selected">Manual Invoice</option>
+        <option value="automatic">Automatic Invoice (Credit Card)</option>
+      </select>
+    </div>
+  </section>
+	
+  <section>
+    <form method="post" action="/subscriptions/new" id="auto_form">
+      <div>
+        <label for="plan_code">Plan</label>
+        <select id="plan_code" name="recurly-plan-code">
+          <option value="basic" selected="selected">Basic</option>
+          <option value="gold">Gold</option>
+        </select>
+      </div>
+        
+      <div>
+        <label for="email">Email Address</label>
+        <input type="text" id="email" name="email">
+      </div>
+        
+      <div>
+        <label for="number">Card Number</label>
+        <input type="text" data-recurly="number" id="number">
+      </div>
 
-      <section>
-        <div>
-          <label for="number">Card Number</label>
-          <input type="text" data-recurly="number" id="number">
-        </div>
+      <div class="date">
+        <label for="month">Month</label>
+        <input type="text" data-recurly="month" id="month" maxlength="2">
+      </div>
 
-        <div class="date">
-          <label for="month">Month</label>
-          <input type="text" data-recurly="month" id="month" maxlength="2">
-        </div>
+      <div class="date">
+        <label for="year">Year</label>
+        <input type="text" data-recurly="year" id="year" maxlength="4">
+      </div>
+		
+      <div>
+        <label for "cvv">CVV</label>
+        <input type="text" data-recurly="cvv" id="cvv" maxlength="3">
+      </div>
 
-        <div class="date">
-          <label for="year">Year</label>
-          <input type="text" data-recurly="year" id="year" maxlength="4">
-        </div>
+      <div>
+        <label for="first_name">First Name</label>
+        <input type="text" data-recurly="first_name" id="first_name">
+      </div>
 
-        <div>
-          <label for="first_name">First Name</label>
-          <input type="text" data-recurly="first_name" id="first_name" name="first-name">
-        </div>
+      <div>
+        <label for="last_name">Last Name</label>
+        <input type="text" data-recurly="last_name" id="last_name">
+      </div>
 
-        <div>
-          <label for="last_name">Last Name</label>
-          <input type="text" data-recurly="last_name" id="last_name" name="last-name">
-        </div>
+      <div>
+        <label for="address1">Address #1</label>
+        <input type="text" data-recurly="address1" id="address1">
+      </div>
+		
+      <div>
+        <label for="address2">Address #2</label>
+        <input type="text" data-recurly="address2" id="address2">
+      </div>
+		
+      <div>
+        <label for="city">City</label>
+        <input type="text" data-recurly="city" id="city">
+      </div>
+		
+      <div>
+        <label for="state">State</label>
+        <input type="text" data-recurly="state" id="state">
+      </div>
+		
+      <div>
+        <label for="postal_code">Postal Code</label>
+        <input type="text" data-recurly="postal_code" id="postal_code">
+      </div>
+		
+      <div>
+        <label for="country">Country</label>
+        <input type="text" data-recurly="country" id="country">
+      </div>
+		
+      <button id="auto_subscribe">Subscribe</button>
 
-        <div>
-          <label for="postal_code">Postal code</label>
-          <input type="text" data-recurly="postal_code" id="postal_code" name="postal-code">
-        </div>
-
-        <button id="subscribe">Subscribe</button>
-
-        <input type="hidden" data-recurly="currency" value="USD">
-        <input type="hidden" data-recurly="plan" name="recurly-plan-code" id="recurly-plan-code">
-        <input type="hidden" data-recurly="token" name="recurly-token">
-      </section>
+      <input type="hidden" data-recurly="token" name="recurly-token">
     </form>
-    <script>
-      (function () {
-        // Configure recurly.js
-        // set window.recurlyConfig to your own public key
-        recurly.configure(window.recurlyConfig);
+	  
+    <form method="post" action="/subscriptions/new_manual" id="man_form">      
+      <div>
+        <label for="plan_code">Plan</label>
+        <select id="plan_code" name="recurly-plan-code">
+          <option value="basic" selected="selected">Basic</option>
+          <option value="gold">Gold</option>
+        </select>
+      </div>
+      
+      <div>
+        <label for="plan_code">PO Number</label>
+        <input type="text" id="po_number" name="po_number">
+      </div>
+      
+      <div>
+        <label for="net_terms">Net Terms</label>
+        <select id="net_terms" name="net_terms">
+          <option value="10" selected="selected">10 days</option>
+          <option value="15" >15 days</option>
+          <option value="30" >30 days</option>
+          <option value="60" >60 days</option>
+        </select>
+      </div>
+      
+      <div>
+        <label for="email">Email Address</label>
+        <input type="text" id="email" name="email">
+      </div>
+      
+      <div>
+        <label for="first_name">First Name</label>
+        <input type="text" id="first_name" name="first_name">
+      </div>
 
-        plan();
+      <div>
+        <label for="last_name">Last Name</label>
+        <input type="text" id="last_name" name="last_name">
+      </div>
+		
+      <div>
+        <label for="company">Company</label>
+        <input type="text" id="company" name="company">
+      </div>
+		
+      <div>
+        <label for="address1">Address #1</label>
+        <input type="text" id="address1" name="address1">
+      </div>
+		
+      <div>
+        <label for="address2">Address #2</label>
+        <input type="text" id="address2" name="address2">
+      </div>
+		
+      <div>
+        <label for="city">City</label>
+        <input type="text" id="city" name="city">
+      </div>
+		
+      <div>
+        <label for="state">State</label>
+        <input type="text" id="state" name="state">
+      </div>
+		
+      <div>
+        <label for="postal_code">Postal Code</label>
+        <input type="text" id="postal_code" name="postal_code">
+      </div>
+		
+      <div>
+        <label for="country">Country</label>
+        <input type="text" id="country" name="country">
+      </div>
 
-        // On form submit, we stop submission to go get the token
-        $('form').on('submit', function (event) {
+      <button id="man_subscribe">Subscribe</button>
+		  
+    </form>  
+	  
+  </section>
+	
+  <script>
+      
+  // On form submit, we stop submission to go get the token
+	  
+  $('#auto_form').on('submit', function (event) {
+    recurly.configure(window.recurlyConfig);
+    // Prevent the form from submitting while we retrieve the token from Recurly
+    event.preventDefault();
 
-          // Prevent the form from submitting while we retrieve the token from Recurly
-          event.preventDefault();
+    // Reset the errors display
+    $('#errors').text('');
+    $('input').removeClass('error');
 
-          // Reset the errors display
-          $('#errors').text('');
-          $('input').removeClass('error');
+    // Disable the submit button
+    $('button').prop('disabled', true);
 
-          // Disable the submit button
-          $('button').prop('disabled', true);
+    var form = this;
 
-          var form = this;
+    // Now we call recurly.token with the form. It goes to Recurly servers
+    // to tokenize the credit card information, then injects the token into the
+    // data-recurly="token" field above
+    recurly.token(form, function (err, token) {
 
-          // Now we call recurly.token with the form. It goes to Recurly servers
-          // to tokenize the credit card information, then injects the token into the
-          // data-recurly="token" field above
-          recurly.token(form, function (err, token) {
+      // send any errors to the error function below
+      if (err) error(err);
 
-            // send any errors to the error function below
-            if (err) error(err);
+      // Otherwise we continue with the form submission
+      else form.submit();
 
-            // Otherwise we continue with the form submission
-            else form.submit();
+    });
+  });
 
-          });
-        });
+  // A simple error handling function to expose errors to the customer
+  function error (err) {
+    $('#errors').text('The following fields appear to be invalid: ' + err.fields.join(', '));
+    $('button').prop('disabled', false);
+    $.each(err.fields, function (i, field) {
+      $('[data-recurly=' + field + ']').addClass('error');
+    });
+  }
 
-        function plan () {
-          var route = window.location.pathname.split('/');
-          var planCode = route[route.length - 1];
-          $('#recurly-plan-code').val(planCode);
-        }
+  // runs some simple animations for the page
+  $('body').addClass('show');
+    
+	
+	
+  function GetUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) 
+    {
+      var sParameterName = sURLVariables[i].split('=');
+      if (sParameterName[0] == sParam) 
+      {
+        return decodeURIComponent(sParameterName[1]).replace(/\+/g, " ")
+      }
+    }
+  }
+	
+  function hideform() {
+    var form = document.getElementById("payment");
+    var strForm = form.options[form.selectedIndex].value;
+    if (strForm === 'automatic') {
+      document.getElementById('auto_form').style.display = 'block';
+      document.getElementById('man_form').style.display = 'none';
+    } else {
+      document.getElementById('auto_form').style.display = 'none';
+      document.getElementById('man_form').style.display = 'block';
+    }
+  }	
+	
+  var customer = {};
+  customer['first_name'] = GetUrlParameter('first_name');
+  customer['last_name'] = GetUrlParameter('last_name');
+  customer['company'] = GetUrlParameter('company');
+  customer['address1'] = GetUrlParameter('address1');
+  customer['city'] = GetUrlParameter('city');
+  customer['state'] = GetUrlParameter('state');
+  customer['postal_code'] = GetUrlParameter('zip');
+  customer['country'] = GetUrlParameter('country');
+  customer['email'] = GetUrlParameter('email');
+  customer['phone'] = GetUrlParameter('phone');
+  customer['po_number'] = GetUrlParameter('po_number');
 
-        // A simple error handling function to expose errors to the customer
-        function error (err) {
-          $('#errors').text('The following fields appear to be invalid: ' + err.fields.join(', '));
-          $('button').prop('disabled', false);
-          $.each(err.fields, function (i, field) {
-            $('[data-recurly=' + field + ']').addClass('error');
-          });
-        }
-
-        // runs some simple animations for the page
-        $('body').addClass('show');
-      })();
-    </script>
-  </body>
+	
+  function FillInFormField(field) {
+    for (var i=0;i<document.getElementsByName(field).length;i++) {
+      document.getElementsByName(field)[i].value=customer[field];
+    }
+  }
+	
+  for (var k in customer) {
+    if (typeof customer[k] !== 'undefined') {
+      FillInFormField(k);
+    }
+  }
+	
+  </script>
+	
+</body>
 </html>

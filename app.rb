@@ -19,8 +19,39 @@ post '/subscriptions/new' do
     Recurly::Subscription.create!({
       plan_code: params['recurly-plan-code'],
       account: {
-        account_code: SecureRandom.uuid,
+        account_code: rand(10 ** 7),
+        email: params['email'],
         billing_info: { token_id: params['recurly-token'] }
+      }
+    })
+
+    "Subscription created"
+  rescue Recurly::Resource::Invalid, Recurly::API::ResponseError => e
+    error(e)
+  end
+end
+
+post '/subscriptions/new_manual' do
+  begin
+    Recurly::Subscription.create!({
+      plan_code: params['recurly-plan-code'],
+      collection_method: 'manual',
+      po_number: params['po_number'],
+      net_terms: params['net_terms'],
+      account: {
+        account_code: rand(10 ** 7),
+        first_name: params['first_name'],
+        last_name: params['last_name'],
+        company_name: params['company'],
+        email: params['email'],
+        address: Recurly::Address.new({
+          address1: params['address1'],
+          address2: params['address2'],
+          city: params['city'],
+          state: params['state'],
+          zip: params['postal_code'],
+          country: params['country'],
+        })
       }
     })
 
