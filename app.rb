@@ -24,7 +24,8 @@ post '/subscriptions/new' do
       }
     })
 
-    "Subscription created"
+    #"Subscription created"
+    redirect to('/success.html')
   rescue Recurly::Resource::Invalid, Recurly::API::ResponseError => e
     error(e)
   end
@@ -64,8 +65,12 @@ get '/fs' do
   Dir["./public/*"].join "\n"
 end
 
-get '*' do
+get '/index.html' do
   send_file File.join(settings.public_folder, 'index.html')
+end
+
+get '/success.html' do
+  send_file File.join(settings.public_folder, 'success.html')
 end
 
 def error e
