@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Recurly.js Example: Minimal Billing Information</title>
-    <script src="https://js.recurly.com/v3/recurly.js"></script>
+    <script src="https://js.recurly.com/v4/recurly.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="config.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
@@ -23,38 +23,41 @@
       <section>
         <div>
           <label for="number">Card Number</label>
-          <input type="text" data-recurly="number" id="number">
+          <div data-recurly="number" id="number"></div>
+        </div>
+        
+        <div>
+          <label for="cvv">CVV</label>
+          <div data-recurly="cvv" id="cvv"></div>
         </div>
 
         <div class="date">
           <label for="month">Month</label>
-          <input type="text" data-recurly="month" id="month" maxlength="2">
+          <div data-recurly="month" id="month"></div>
         </div>
 
         <div class="date">
           <label for="year">Year</label>
-          <input type="text" data-recurly="year" id="year" maxlength="4">
+          <div data-recurly="year" id="year"></div>
         </div>
 
         <div>
           <label for="first_name">First Name</label>
-          <input type="text" data-recurly="first_name" id="first_name" name="first-name">
+          <input type="text" data-recurly="first_name" id="first_name">
         </div>
 
         <div>
           <label for="last_name">Last Name</label>
-          <input type="text" data-recurly="last_name" id="last_name" name="last-name">
+          <input type="text" data-recurly="last_name" id="last_name">
         </div>
 
         <div>
           <label for="postal_code">Postal code</label>
-          <input type="text" data-recurly="postal_code" id="postal_code" name="postal-code">
+          <input type="text" data-recurly="postal_code" id="postal_code">
         </div>
 
         <button id="subscribe">Subscribe</button>
 
-        <input type="hidden" data-recurly="currency" value="USD">
-        <input type="hidden" data-recurly="plan" name="recurly-plan-code" id="recurly-plan-code">
         <input type="hidden" data-recurly="token" name="recurly-token">
       </section>
     </form>
@@ -62,9 +65,72 @@
       (function () {
         // Configure recurly.js
         // set window.recurlyConfig to your own public key
-        recurly.configure(window.recurlyConfig);
+        // Configure recurly.js
+        recurly.configure({
+          publicKey: window.recurlyPublicKey,
+          fields: {
+            number: '#number',
+            cvv: '#cvv',
+            month: '#month',
+            year: '#year',
+          },
+          style: {
+            all: {
+              fontFamily: 'Open Sans',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              fontColor: '#2c0730'
+            },
+            number: {
+              placeholder: ''
+            },
+            month: {
+              placeholder: 'mm'
+            },
+            year: {
+              placeholder: 'yy'
+            },
+            cvv: {
+              placeholder: ''
+            }
+          }
+        });
 
-        plan();
+        // When field state changes, i.e. when the customer changes a value
+        recurly.on('change', function (state) {
+          // state = {
+          //   "fields": {
+          //     "number": {
+          //       "valid": false,
+          //       "firstSix": "",
+          //       "lastFour": "",
+          //       "brand": "unknown",
+          //       "empty": true,
+          //       "length": 0
+          //     },
+          //     "month": {
+          //       "valid": false,
+          //       "empty": true,
+          //       "length": 0
+          //     },
+          //     "year": {
+          //       "valid": false,
+          //       "empty": true,
+          //       "length": 0
+          //     },
+          //     "cvv": {
+          //       "valid": false,
+          //       "empty": true,
+          //       "length": 0
+          //     }
+          //   }
+          // }
+        });
+
+        // When a customer hits their 'enter' key while in a field
+        recurly.on('field:submit', function (event) {
+          $('form').submit();
+        });
 
         // On form submit, we stop submission to go get the token
         $('form').on('submit', function (event) {
@@ -95,11 +161,26 @@
           });
         });
 
-        function plan () {
-          var route = window.location.pathname.split('/');
-          var planCode = route[route.length - 1];
-          $('#recurly-plan-code').val(planCode);
-        }
+        // Reconfigure font size based on window size
+        $(window).on('resize init', function (event) {
+          if ($(this).width() < 600) {
+            recurly.configure({
+              style: {
+                all: {
+                  fontSize: '0.9rem'
+                }
+              }
+            });
+          } else {
+            recurly.configure({
+              style: {
+                all: {
+                  fontSize: '1rem'
+                }
+              }
+            });
+          }
+        }).triggerHandler('init');
 
         // A simple error handling function to expose errors to the customer
         function error (err) {

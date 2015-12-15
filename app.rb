@@ -58,7 +58,7 @@ end
 
 get '/config.js' do
   content_type :js
-  "window.recurlyConfig = { publicKey: '#{ENV['RECURLY_PUBLIC_KEY']}' }"
+  "window.recurlyPublicKey = '#{ENV['RECURLY_PUBLIC_KEY']}'"
 end
 
 get '/fs' do
