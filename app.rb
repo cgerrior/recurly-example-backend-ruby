@@ -24,8 +24,8 @@ post '/subscriptions/new' do
       }
     })
 
-    #"Subscription created"
-    redirect to('/success.html')
+    "Subscription created"
+    #redirect to('/success.html')
   rescue Recurly::Resource::Invalid, Recurly::API::ResponseError => e
     error(e)
   end

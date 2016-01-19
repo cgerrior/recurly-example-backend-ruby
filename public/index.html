@@ -98,33 +98,6 @@
 
         // When field state changes, i.e. when the customer changes a value
         recurly.on('change', function (state) {
-          // state = {
-          //   "fields": {
-          //     "number": {
-          //       "valid": false,
-          //       "firstSix": "",
-          //       "lastFour": "",
-          //       "brand": "unknown",
-          //       "empty": true,
-          //       "length": 0
-          //     },
-          //     "month": {
-          //       "valid": false,
-          //       "empty": true,
-          //       "length": 0
-          //     },
-          //     "year": {
-          //       "valid": false,
-          //       "empty": true,
-          //       "length": 0
-          //     },
-          //     "cvv": {
-          //       "valid": false,
-          //       "empty": true,
-          //       "length": 0
-          //     }
-          //   }
-          // }
         });
 
         // When a customer hits their 'enter' key while in a field
