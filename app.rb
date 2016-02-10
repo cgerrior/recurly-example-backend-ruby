@@ -48,7 +48,7 @@ put '/accounts/:account_code' do
   begin
     account = Recurly::Account.find params[:account_code]
     account.billing_info.token_id = params['recurly-token']
-    account.save!
+    account.billing_info.save!
 
     "Account updated"
   rescue Recurly::Resource::Invalid, Recurly::API::ResponseError => e
