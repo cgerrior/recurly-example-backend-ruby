@@ -25,8 +25,8 @@ post '/subscriptions/new' do
     })
 
     "Subscription created"
-    #redirect to('/success.html')
   rescue Recurly::Resource::Invalid, Recurly::API::ResponseError => e
+    puts e.message
     error(e)
   end
 end
@@ -40,6 +40,7 @@ post '/accounts/new' do
 
     "Account created"
   rescue Recurly::Resource::Invalid, Recurly::API::ResponseError => e
+    puts e.message
     error(e)
   end
 end
@@ -52,6 +53,7 @@ put '/accounts/:account_code' do
 
     "Account updated"
   rescue Recurly::Resource::Invalid, Recurly::API::ResponseError => e
+    puts e.message
     error(e)
   end
 end
