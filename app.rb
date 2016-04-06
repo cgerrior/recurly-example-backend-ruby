@@ -2,6 +2,9 @@ require 'securerandom'
 require 'sinatra'
 require 'recurly'
 require 'dotenv'
+require 'logger'
+
+$LOG = Logger.new(STDOUT)
 
 Dotenv.load
 
@@ -12,7 +15,6 @@ set :port, ENV['PORT']
 set :public_folder, 'public'
 
 enable :static
-enable :logging
 
 post '/subscriptions/new' do
   begin
@@ -26,8 +28,7 @@ post '/subscriptions/new' do
 
     "Subscription created"
   rescue Recurly::Resource::Invalid, Recurly::API::ResponseError => e
-    puts e.message
-    error(e)
+    $LOG.error "#{e.message}"
   end
 end
 
@@ -40,8 +41,7 @@ post '/accounts/new' do
 
     "Account created"
   rescue Recurly::Resource::Invalid, Recurly::API::ResponseError => e
-    puts e.message
-    error(e)
+    $LOG.error "#{e.message}"
   end
 end
 
@@ -53,8 +53,7 @@ put '/accounts/:account_code' do
 
     "Account updated"
   rescue Recurly::Resource::Invalid, Recurly::API::ResponseError => e
-    puts e.message
-    error(e)
+    $LOG.error "#{e.message}"
   end
 end
 
@@ -73,10 +72,4 @@ end
 
 get '/success.html' do
   send_file File.join(settings.public_folder, 'success.html')
-end
-
-def error e
-  logger.error e
-  status 402
-  "An error occurred"
 end
