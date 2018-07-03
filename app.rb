@@ -17,19 +17,36 @@ set :public_folder, 'public'
 enable :static
 
 post '/subscriptions/new' do
-  begin
-    Recurly::Subscription.create!({
-      plan_code: params['recurly-plan-code'],
-      account: {
-        account_code: rand(10 ** 7),
-        billing_info: { token_id: params['recurly-token'] }
-      }
-    })
 
-    "Subscription created"
-  rescue Recurly::Resource::Invalid, Recurly::API::ResponseError => e
-    $LOG.error "#{e.message}"
-  end
+
+purchase = Recurly::Purchase.new({
+  currency: 'USD',
+  collection_method: :automatic,
+  account: {
+    account_code: SecureRandom.uuid,
+    billing_info: { token_id: params['recurly-token'] },
+  },
+  subscriptions: [
+    {
+      plan_code: "gold",
+    }
+  ]
+})
+"subscription has been created"
+begin
+  collection = Recurly::Purchase.invoice!(purchase)
+  puts collection.inspect
+rescue Recurly::Resource::Invalid => e
+  puts e.inspect
+  # Invalid data
+rescue Recurly::Transaction::Error => e
+  puts e.inspect
+  # Transaction error
+  # e.transaction
+  # e.transaction_error_code
+end
+
+
 end
 
 post '/accounts/new' do
@@ -66,10 +83,11 @@ get '/fs' do
   Dir["./public/*"].join "\n"
 end
 
-get '/index.html' do
+get '/' do
   send_file File.join(settings.public_folder, 'index.html')
 end
 
 get '/success.html' do
   send_file File.join(settings.public_folder, 'success.html')
 end
+
