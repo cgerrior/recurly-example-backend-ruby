@@ -10,6 +10,7 @@
 /tmp/
 /.env
 *.env
+/.DS_Store
 
 ## Environment normalisation:
 /.bundle/
