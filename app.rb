@@ -87,6 +87,10 @@ get '/' do
   send_file File.join(settings.public_folder, 'index.html')
 end
 
+get '/index_combined.html' do
+  send_file File.join(settings.public_folder, 'index_combined.html')
+end
+
 get '/success.html' do
   send_file File.join(settings.public_folder, 'success.html')
 end
