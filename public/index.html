@@ -21,44 +21,11 @@
       <section id="errors"></section>
 
       <section>
-        <div>
-          <label for="number">Card Number</label>
-          <div data-recurly="number" id="number"></div>
-        </div>
-        
-        <div>
-          <label for="cvv">CVV</label>
-          <div data-recurly="cvv" id="cvv"></div>
-        </div>
-
-        <div class="date">
-          <label for="month">Month</label>
-          <div data-recurly="month" id="month"></div>
-        </div>
-
-        <div class="date">
-          <label for="year">Year</label>
-          <div data-recurly="year" id="year"></div>
-        </div>
-
-        <div>
-          <label for="first_name">First Name</label>
-          <input type="text" data-recurly="first_name" id="first_name">
-        </div>
-
-        <div>
-          <label for="last_name">Last Name</label>
-          <input type="text" data-recurly="last_name" id="last_name">
-        </div>
-
-        <div>
-          <label for="postal_code">Postal code</label>
-          <input type="text" data-recurly="postal_code" id="postal_code">
-        </div>
-
-        <button id="subscribe">Subscribe</button>
-
-        <input type="hidden" data-recurly="token" name="recurly-token">
+          <input placeholder="First Name" type="text" data-recurly="first_name">
+          <input placeholder="Last Name" type="text" data-recurly="last_name">
+          <div data-recurly="card"></div>
+          <input type="hidden" name="recurly-token" data-recurly="token">
+          <button id="subscribe">Subscribe</button>
       </section>
     </form>
     <script>
